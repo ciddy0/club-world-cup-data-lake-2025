@@ -4,25 +4,18 @@ This project builds a data ingestion pipeline for the 2025 FIFA Club World Cup u
 
 ## Project Structure
 
+```
 club-world-cup-data-lake-2025/
-
 ├── dags/
-
 │ └── ingest_matches.py # Airflow DAG to ingest match data
-
 ├── scripts/
-
 │ └── api_fetcher.py # Python script that fetches match data from ESPN API
-
 ├── data/
-
 │ └── raw/ # Raw JSON files saved from the API
-
 ├── logs/ # Airflow logs (ignored via .gitignore)
-
 ├── .gitignore
-
 └── README.md
+```
 
 ## Features
 
