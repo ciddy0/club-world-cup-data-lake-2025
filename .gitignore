@@ -1,0 +1,28 @@
+# Ignore Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Ignore Airflow logs
+logs/
+*/logs/
+*.log
+
+# Ignore Airflow metadata DB
+airflow.db
+airflow.db-journal
+
+# Ignore environment files
+.env
+*.env
+*.swp
+.DS_Store
+
+# Ignore raw/exported JSON data
+*.json
+
+# Optional: ignore virtual environments
+.venv/
+env/
+
