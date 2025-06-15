@@ -4,10 +4,11 @@ from datetime import datetime
 import sys
 import os
 import logging
-from api_fetcher import fetch_match_data
 
 # Add the ../scripts directory to Python path to import the custom fetch function
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../scripts')))
+
+from api_fetcher import fetch_match_data, fetch_match_summaries
 
 # Default arguments for the DAG
 default_args = {
@@ -30,6 +31,14 @@ with DAG(
     fetch_matches = PythonOperator(
         task_id="fetch_match_data",
         python_callable=fetch_match_data,
+        provide_context=True
     )
+    fetch_summaries = PythonOperator(
+        task_id="fetch_match_summaries",
+        python_callable=fetch_match_summaries,
+        provide_context = True
+    )
+    fetch_matches >> fetch_summaries
+
 
 dag = dag

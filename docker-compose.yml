@@ -21,13 +21,13 @@ services:
       AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
       AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
       AIRFLOW__WEBSERVER__EXPOSE_CONFIG: 'true'
-      PYTHONPATH: /opt/airflow/scripts  # <-- Add scripts folder to PYTHONPATH here
+      PYTHONPATH: /opt/airflow/scripts  
     volumes:
       - ./dags:/opt/airflow/dags
       - ./logs:/opt/airflow/logs
       - ./plugins:/opt/airflow/plugins
       - ./scripts:/opt/airflow/scripts 
-      - ./data:/opt/airflow/data        # <-- Mount scripts folder here
+      - ./data:/opt/airflow/data      
     ports:
       - 8080:8080
     command: >
@@ -43,13 +43,13 @@ services:
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
       AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:airflow@postgres/airflow
-      PYTHONPATH: /opt/airflow/scripts  # <-- Add scripts folder to PYTHONPATH here too
+      PYTHONPATH: /opt/airflow/scripts 
     volumes:
       - ./dags:/opt/airflow/dags
       - ./logs:/opt/airflow/logs
       - ./plugins:/opt/airflow/plugins
       - ./data:/opt/airflow/data
-      - ./scripts:/opt/airflow/scripts      # <-- Mount scripts folder here too
+      - ./scripts:/opt/airflow/scripts    
     command: airflow scheduler
 
 volumes:

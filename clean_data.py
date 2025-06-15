@@ -62,7 +62,7 @@ df_events = pd.DataFrame(match_events)
 df_teams.columns = df_teams.columns.str.lower().str.replace(" ", "_")
 df_events.columns = df_events.columns.str.lower().str.replace(" ", "_")
 
-# Convert score to integer
+# Convert score and minutes to integer
 df_teams["score"] = pd.to_numeric(df_teams["score"], errors="coerce")
 df_events["minute"] = pd.to_numeric(df_events["minute"], errors="coerce")
 
