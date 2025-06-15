@@ -9,7 +9,7 @@ import logging
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../scripts')))
 
 from api_fetcher import fetch_match_data, fetch_match_summaries
-
+from transform_data import load_all_matches_to_supabase
 # Default arguments for the DAG
 default_args = {
     "owner": "airflow",
@@ -38,7 +38,12 @@ with DAG(
         python_callable=fetch_match_summaries,
         provide_context = True
     )
-    fetch_matches >> fetch_summaries
+    load_to_supabase = PythonOperator(
+        task_id="load_all_matches_to_supabase",
+        python_callable=load_all_matches_to_supabase,
+        provide_context=True  # required for XCom pull
+    )
+    fetch_matches >> fetch_summaries >> load_to_supabase
 
 
 dag = dag
