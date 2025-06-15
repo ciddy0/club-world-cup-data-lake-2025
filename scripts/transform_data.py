@@ -97,7 +97,6 @@ def extract_summary_data_from_files(event_ids, raw_data_dir="/opt/airflow/data/r
                     stat.get("name"): stat.get("value") or stat.get("displayValue") 
                     for stat in stats
                 }
-
                 results["rosters"].append({
                     "team": team_info.get("displayName"),
                     "teamId": team_info.get("id"),
@@ -109,7 +108,10 @@ def extract_summary_data_from_files(event_ids, raw_data_dir="/opt/airflow/data/r
                     "active": player.get("active"),
                     "subbedIn": player.get("subbedIn"),
                     "subbedOut": player.get("subbedOut"),
-                    "stats": stats_dict
+                    "stats": stats_dict,
+                    "position": player.get("position", {}).get("displayName"),
+                    "position_abbr": player.get("position", {}).get("abbreviation"),
+                    "headshot": athlete.get("headshot", {}).get("href")
                 })
 
         all_match_data.append({
