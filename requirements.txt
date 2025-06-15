@@ -1,7 +1,1 @@
-apache-airflow==2.8.1
-requests
-pandas
-boto3
-dbt-core
-dbt-postgres
-streamlit
+supabase
