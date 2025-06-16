@@ -24,42 +24,28 @@ def extract_summary_data_from_files(event_ids, raw_data_dir="/opt/airflow/data/r
             data = json.load(f)
 
         boxscore_form = data.get("boxscore", {}).get("form", [])
-        if not boxscore_form:
-            print(f"No form data in boxscore for event {event_id}")
+        if len(boxscore_form) < 2:
+            print(f"Boxscore form incomplete for event {event_id}")
             continue
 
-        # Look for the event with matching event_id inside any team's events list
-        event_found = None
-        for team in boxscore_form:
-            for event in team.get("events", []):
-                if str(event.get("id")) == str(event_id):
-                    event_found = event
-                    break
-            if event_found:
-                break
-
-        if not event_found:
-            print(f"Event {event_id} not found in boxscore form events")
-            continue
-
-        # Extract team info
-        home_team_id = event_found.get("homeTeamId")
-        away_team_id = event_found.get("awayTeamId")
-        game_date = event_found.get("gameDate")
-
-        home_team = next((t["team"] for t in boxscore_form if t["team"]["id"] == home_team_id), None)
-        away_team = next((t["team"] for t in boxscore_form if t["team"]["id"] == away_team_id), None)
+        home_team = boxscore_form[0].get("team")
+        away_team = boxscore_form[1].get("team")
 
         if not home_team or not away_team:
-            print(f"Could not find both teams for event {event_id}")
+            print(f"Missing team info for event {event_id}")
             continue
+
+        game_date = (
+            data.get("game", {}).get("date") or
+            data.get("header", {}).get("competitions", [{}])[0].get("date")
+        )
 
         match_info = {
             "date": game_date,
             "home_team": home_team.get("displayName"),
             "away_team": away_team.get("displayName"),
-            "home_team_id": home_team_id,
-            "away_team_id": away_team_id
+            "home_team_id": home_team.get("id"),
+            "away_team_id": away_team.get("id")
         }
 
         results = {
@@ -123,7 +109,7 @@ def extract_summary_data_from_files(event_ids, raw_data_dir="/opt/airflow/data/r
     return all_match_data
 
 def load_all_matches_to_supabase(**context):
-    event_ids = context['ti'].xcom_pull(key="event_ids", task_ids="fetch_match_data")
+    event_ids = context['ti'].xcom_pull(key="event_ids", task_ids="fetch_match_data", include_prior_dates=False)
     if not event_ids:
         print("No event IDs to process")
         return
